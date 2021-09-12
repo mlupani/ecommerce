@@ -9,7 +9,7 @@
     "routers": [
         {
             "src": "/(.*)",
-            "dest": "/"
+            "dest": "/api/productos"
         }
     ]
 }
