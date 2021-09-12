@@ -7,14 +7,11 @@ cloudinary.config( process.env.CLOUDINARY_URL );
 const { response } = require('express');
 const { subirArchivo } = require('../helpers');
 
-const { Usuario, Producto } = require('../models');
-
+const { Usuario, Producto, Categoria } = require('../models');
 
 const cargarArchivo = async(req, res = response) => {
 
-
     try {
-        
         // txt, md
         // const nombre = await subirArchivo( req.files, ['txt','md'], 'textos' );
         const nombre = await subirArchivo( req.files, undefined, 'imgs' );
@@ -41,7 +38,7 @@ const actualizarImagen = async(req, res = response ) => {
                     msg: `No existe un usuario con el id ${ id }`
                 });
             }
-        
+
         break;
 
         case 'productos':
@@ -49,6 +46,16 @@ const actualizarImagen = async(req, res = response ) => {
             if ( !modelo ) {
                 return res.status(400).json({
                     msg: `No existe un producto con el id ${ id }`
+                });
+            }
+        
+        break;
+
+        case 'categorias':
+            modelo = await Categoria.findById(id);
+            if ( !modelo ) {
+                return res.status(400).json({
+                    msg: `No existe la categoria con el id ${ id }`
                 });
             }
         
@@ -106,6 +113,16 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
             }
         
         break;
+
+        case 'categorias':
+            modelo = await Categoria.findById(id);
+            if ( !modelo ) {
+                return res.status(400).json({
+                    msg: `No existe una categoria con el id ${ id }`
+                });
+            }
+        
+        break;
     
         default:
             return res.status(500).json({ msg: 'Se me olvidó validar esto'});
@@ -123,7 +140,7 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
 
 
     const { tempFilePath } = req.files.archivo
-    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+    const { secure_url } = await cloudinary.uploader.upload( tempFilePath,  options = {folder: 'ecommerce'} );
     modelo.img = secure_url;
 
     await modelo.save();

@@ -6,16 +6,11 @@ const CategoriaSchema = Schema({
         required: [true, 'El nombre es obligatorio'],
         unique: true
     },
-    estado: {
-        type: Boolean,
-        default: true,
-        required: true
+    descripcion: {
+        type: String,
+        required: [true, 'La descripcion es obligatoria'],
     },
-    usuario: {
-        type: Schema.Types.ObjectId,
-        ref: 'Usuario',
-        required: true
-    }
+    img: { type: String },
 });
 
 

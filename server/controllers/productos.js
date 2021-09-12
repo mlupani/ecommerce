@@ -1,16 +1,14 @@
 const { response } = require('express');
-const { Producto } = require('../models');
+const { Producto, Categoria } = require('../models');
 
 
 const obtenerProductos = async(req, res = response ) => {
 
     const { limite = 5, desde = 0 } = req.query;
-    const query = { estado: true };
 
     const [ total, productos ] = await Promise.all([
-        Producto.countDocuments(query),
-        Producto.find(query)
-            .populate('usuario', 'nombre')
+        Producto.countDocuments(),
+        Producto.find()
             .populate('categoria', 'nombre')
             .skip( Number( desde ) )
             .limit(Number( limite ))
@@ -19,6 +17,32 @@ const obtenerProductos = async(req, res = response ) => {
     res.json({
         total,
         productos
+    });
+}
+
+const obtenerProductosTrending = async(req, res = response ) => {
+
+    const { limite = 4, desde = 0 } = req.query;
+
+    const [ categorias ] = await Promise.all([
+        Categoria.find()
+            .skip( Number( desde ) )
+            .limit(Number( 5 ))
+    ]);
+
+    let resp  = await Promise.all(
+        categorias.map(async ({_id}) => {
+            let query = { categoria: _id };
+            let productos = await Producto.find(query)
+                    .populate('categoria', 'nombre')
+                    .skip( Number( desde ) )
+                    .limit(Number( limite ));
+            return productos
+        })
+    );
+
+    res.json({
+        resp
     });
 }
 
@@ -35,7 +59,7 @@ const obtenerProducto = async(req, res = response ) => {
 
 const crearProducto = async(req, res = response ) => {
 
-    const { estado, usuario, ...body } = req.body;
+    const { estado, ...body } = req.body;
 
     const productoDB = await Producto.findOne({ nombre: body.nombre.toUpperCase() });
 
@@ -50,7 +74,6 @@ const crearProducto = async(req, res = response ) => {
     const data = {
         ...body,
         nombre: body.nombre.toUpperCase(),
-        usuario: req.usuario._id
     }
 
     const producto = new Producto( data );
@@ -58,7 +81,6 @@ const crearProducto = async(req, res = response ) => {
     // Guardar DB
     const nuevoProducto = await producto.save();
     await nuevoProducto
-        .populate('usuario', 'nombre')
         .populate('categoria', 'nombre')
         .execPopulate();
 
@@ -104,5 +126,6 @@ module.exports = {
     obtenerProductos,
     obtenerProducto,
     actualizarProducto,
-    borrarProducto
+    borrarProducto,
+    obtenerProductosTrending
 }

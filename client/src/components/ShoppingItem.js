@@ -1,0 +1,53 @@
+import { useSelector } from 'react-redux'
+import useCarrito from '../hooks/useCarrito'
+import useDevice from '../hooks/useDevice'
+
+const ShoppingItem = () => {
+
+	const { carrito, total_dinero, cantidad } = useSelector(({carrito}) => carrito)
+	const { substractCarrito } = useCarrito()
+	const isMobile = useDevice()
+
+	return (
+		<div className="shopping-item" style={{right: `${isMobile ? 'auto':'-30px'}`}}>
+			{
+				cantidad ?
+					<div className="dropdown-cart-header">
+						<span>{cantidad} Productos</span>
+						<a href="#">Ver carrito</a>
+					</div> : ''
+			}
+			<ul className="shopping-list">
+				{
+					cantidad ?
+						carrito.map(prod => (
+							<li key={prod._id}>
+								<div style={{display: 'flex', flexDirection: 'row'}}>
+									<div style={{display:'flex', justifyContent: 'space-evenly', flexDirection: 'column'}}>
+										<a onClick={(e) => substractCarrito(e, prod)} href="#" className="remove" title="Remover producto"><i className="fa fa-remove"></i></a>
+										<h4><a href="#">{prod.nombre}</a></h4>
+										<p className="quantity">{prod.cantidad} x - <span className="amount">{prod.precio}</span></p>
+									</div>
+									<div style={{width:'50%', height: 'auto'}}>
+										<a className="cart-img" href="#"><img src={prod.img} alt="#"/></a>
+									</div>
+								</div>
+							</li>
+						)) : <p>No hay productos en el carrito</p>
+				}
+			</ul>
+			{
+				cantidad ?
+					<div className="bottom">
+						<div className="total">
+							<span>Total</span>
+							<span className="total-amount">$ {total_dinero}</span>
+						</div>
+						<a href="checkout.html" className="btn animate">Pagar</a>
+					</div>  : ''
+			}
+		</div>
+	)
+}
+
+export default ShoppingItem
