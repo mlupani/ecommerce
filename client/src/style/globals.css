@@ -1067,7 +1067,7 @@
 }
 .header .search-form {
 	position: absolute;
-	left: -128px;
+	right: 30px;
 	z-index: 9999;
 	opacity: 0;
 	visibility: hidden;
@@ -5015,4 +5015,36 @@
 .bg-light{
 	background-color: white !important;
 }
+
+.fade {
+	animation: fadeIn 5s;
+	-webkit-animation: fadeIn 5s;
+	-moz-animation: fadeIn 5s;
+	-o-animation: fadeIn 5s;
+	-ms-animation: fadeIn 5s;
+  }
+  @keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }
+  
+  @-moz-keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }
+  
+  @-webkit-keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }
+  
+  @-o-keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }
+  
+  @-ms-keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }
 

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -11,6 +12,7 @@ const HeaderMiddleInner = () => {
 
 	const { categorias } = useSelector(({categorias}) => categorias)
 	const isMobile = useDevice()
+	const [activeSearch, setActiveSearch] = useState(false)
 
 	const customStyles = {
 		container: provided => ({
@@ -40,10 +42,10 @@ const HeaderMiddleInner = () => {
 
 									<IconsBar/>
 
-									<div className="search-top" style={{display: 'flex'}}>
-										<div className="top-search"><a href="#0"><i style={{fontSize: `${isMobile ? '21px':'' }` }} className="ti-search"></i></a></div>
+									<div className={`search-top ${activeSearch ? 'active':''}`} style={{display: 'flex'}}>
+										<div className="top-search"><a onClick={(e) => { e.preventDefault();setActiveSearch(!activeSearch)}} href="#0"><i style={{fontSize: `${isMobile ? '21px':'' }` }} className="ti-search"></i></a></div>
 
-										<div className="search-top">
+										<div className="search-top input">
 											<form className="search-form">
 												<input type="text" placeholder="Search here..." name="search"/>
 												<button value="search" type="submit"><i className="ti-search"></i></button>

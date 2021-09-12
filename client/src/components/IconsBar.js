@@ -22,7 +22,7 @@ const IconsBar = () => {
 							</div>
 						</>
 				}
-				<div className="sinlge-bar shopping">
+				<div className="sinlge-bar shopping" style={{display: `${isMobile ? 'flex' : 'inline-block' }` , justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
 					{
 						<p href="#" className="single-icon">
 							<i style={{fontSize: `${isMobile ? '25px':'' }` }} className="ti-shopping-cart"></i>

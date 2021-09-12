@@ -1171,13 +1171,11 @@
 	display: none;
 }
 /* Header Search */
-.header.shop .search-top {
-	/*
+.header.shop .search-top .input {
 	display:block;
 	position: absolute;
 	right: 70px;
 	top: 8px;
-	*/
 }
 .header.shop .logo {
 	margin: 0;
