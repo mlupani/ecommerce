@@ -69,10 +69,9 @@ const HeaderMiddleInner = () => {
 										</Nav>
 									</Navbar.Collapse>
 								</Navbar>
-						
 							</div>
 					}
-					
+
 					{
 						!isMobile &&
 						<>

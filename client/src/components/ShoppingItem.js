@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import useCarrito from '../hooks/useCarrito'
 import useDevice from '../hooks/useDevice'
+import { Link } from 'react-router-dom'
 
 const ShoppingItem = () => {
 
@@ -13,8 +14,8 @@ const ShoppingItem = () => {
 			{
 				cantidad ?
 					<div className="dropdown-cart-header">
-						<span>{cantidad} Productos</span>
-						<a href="#">Ver carrito</a>
+						<span>{carrito.length} {carrito.length === 1 ? 'Producto' : 'Productos'} </span>
+						<Link to="/cart">Ver carrito</Link>
 					</div> : ''
 			}
 			<ul className="shopping-list">

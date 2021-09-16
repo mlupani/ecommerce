@@ -1,27 +1,62 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { delProduct, addProduct, calcularDinero, calcularCantidad } from '../store/slices/carrito'
+import { delProduct, addProduct, calcularDinero, calcularCantidad, removeProduct, asignarEnvio, asignarCarrito, saveCarritoDB, restoreCarritoDB } from '../store/slices/carrito'
 import { toast } from 'react-toastify'
 
 const useCarrito = () => {
 
 	const dispatch = useDispatch()
-	const { carrito } = useSelector(state => state.carrito)
-	const { cantidad, total_dinero } = useSelector(state => state.carrito)
+	const totalCarrito = useSelector(state => state.carrito)
+	const { carrito, cantidad, total_dinero } = totalCarrito
+	const usuario = useSelector(state => state.usuario)
 
 	useEffect(() => {
-		dispatch(calcularDinero())
+		if(usuario.status === 'not-authenticated' && localStorage.getItem('carrito')){
+			dispatch(asignarCarrito(JSON.parse(localStorage.getItem('carrito'))))
+		}
+		if(usuario.status === 'authenticated'){
+			if(localStorage.getItem('carrito')){
+				dispatch(asignarCarrito(JSON.parse(localStorage.getItem('carrito'))))
+				const carroLS = JSON.parse(localStorage.getItem('carrito'))
+				carroLS.carrito.forEach(producto => dispatch(saveCarritoDB({producto, cantidad: producto.cantidad, action: 'add'})))
+			}
+			else
+				dispatch(restoreCarritoDB())
+		}
+	}, [usuario])
+
+	useEffect(() => {
+
 		dispatch(calcularCantidad())
-	}, [carrito, dispatch])
+		dispatch(calcularDinero())
+
+		if(usuario.status === 'not-authenticated'){
+			localStorage.setItem('carrito', JSON.stringify(totalCarrito))
+		}
+	}, [totalCarrito.carrito.length])
 
 	const substractCarrito = (e, producto) => {
 		e.preventDefault()
 		dispatch(delProduct({producto, cantidad: 1}))
+		if(usuario.status === 'authenticated'){
+			dispatch(saveCarritoDB({producto, cantidad: 1, action: 'minus'}))
+		}
 	}
 
-	const substractCarritoProduct = producto => {
-		const cantidad = producto.cantidad
+	const removeProductCarrito = (e, producto) => {
+		e.preventDefault()
+		dispatch(removeProduct(producto))
+		if(usuario.status === 'authenticated'){
+			dispatch(saveCarritoDB({producto, cantidad: producto.cantidad, action: 'minus'}))
+		}
+	}
+
+	const substractCarritoProduct = (e, producto, cantidad = 1) => {
+		if(e)	e.preventDefault()
 		dispatch(delProduct({producto, cantidad}))
+		if(usuario.status === 'authenticated'){
+			dispatch(saveCarritoDB({producto, cantidad, action: 'minus'}))
+		}
 	}
 
 	const vaciarCarrito = () => {
@@ -29,12 +64,22 @@ const useCarrito = () => {
 		carrito.forEach(producto => {
 			cantidad = producto.cantidad
 			dispatch(delProduct({producto, cantidad}))
+			if(usuario.status === 'authenticated'){
+				dispatch(saveCarritoDB({producto, cantidad, action: 'minus'}))
+			}
 		})
 	}
 
-	const addCarrito = (e, producto) =>{
-		e.preventDefault()
-		dispatch(addProduct(producto))
+	const calcularEnvio = (monto_envio) => {
+		dispatch(asignarEnvio(monto_envio))
+	}
+
+	const addCarrito = (e, producto, cantidad = 1) =>{
+		if(e)	e.preventDefault()
+		dispatch(addProduct({producto, cantidad}))
+		if(usuario.status === 'authenticated'){
+			dispatch(saveCarritoDB({producto, cantidad, action: 'add'}))
+		}
 		toast('Producto agregado al carrito', {
 			position: 'bottom-right',
 			autoClose: 1500,
@@ -51,7 +96,9 @@ const useCarrito = () => {
 		substractCarrito,
 		substractCarritoProduct,
 		vaciarCarrito,
+		removeProductCarrito,
 		addCarrito,
+		calcularEnvio,
 		total_dinero,
 		cantidad
 	}

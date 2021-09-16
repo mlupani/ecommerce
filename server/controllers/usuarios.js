@@ -26,9 +26,9 @@ const usuariosGet = async(req = request, res = response) => {
 }
 
 const usuariosPost = async(req, res = response) => {
-    
-    const { nombre, correo, password, rol } = req.body;
-    const usuario = new Usuario({ nombre, correo, password, rol });
+    console.log(req.body)
+    const { nombre, correo, password, rol, apellido, telefono, pais, ciudad, direccion, img } = req.body;
+    const usuario = new Usuario({ nombre, correo, password, rol, apellido, telefono, pais, ciudad, direccion, img });
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
@@ -49,7 +49,7 @@ const usuariosPost = async(req, res = response) => {
 const usuariosPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, password, google, correo, ...resto } = req.body;
+    const { _id, password, ...resto } = req.body;
 
     if ( password ) {
         // Encriptar la contraseña
@@ -57,9 +57,17 @@ const usuariosPut = async(req, res = response) => {
         resto.password = bcryptjs.hashSync( password, salt );
     }
 
-    const usuario = await Usuario.findByIdAndUpdate( id, resto );
+    await Usuario.findByIdAndUpdate( id, resto );
+    const usuario = await Usuario.findById( id );
 
-    res.json(usuario);
+    // Generar el JWT
+    const token = await generarJWT( usuario._id );
+
+    res.json({
+        usuario,
+        token
+    });
+
 }
 
 const usuariosPatch = (req, res = response) => {

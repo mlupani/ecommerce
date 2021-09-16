@@ -128,7 +128,6 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
             return res.status(500).json({ msg: 'Se me olvidó validar esto'});
     }
 
-
     // Limpiar imágenes previas
     if ( modelo.img ) {
         const nombreArr = modelo.img.split('/');
@@ -146,7 +145,7 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
     await modelo.save();
 
 
-    res.json( modelo );
+    res.json( modelo.img );
 
 }
 

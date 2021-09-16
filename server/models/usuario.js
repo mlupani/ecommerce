@@ -15,6 +15,30 @@ const UsuarioSchema = Schema({
         type: String,
         required: [true, 'La contraseña es obligatoria'],
     },
+    apellido: {
+        type: String,
+        required: [true, 'El apellido es obligatorio']
+    },
+    telefono: {
+        type: String,
+        required: [true, 'El telefono es obligatorio'],
+        unique: true
+    },
+    pais: {
+        type: String,
+        required: [true, 'El pais es obligatorio'],
+        unique: true
+    },
+    ciudad: {
+        type: String,
+        required: [true, 'La ciudad es obligatoria'],
+        unique: true
+    },
+    direccion: {
+        type: String,
+        required: [true, 'La direccion es obligatoria'],
+        unique: true
+    },
     img: {
         type: String,
     },
@@ -23,14 +47,6 @@ const UsuarioSchema = Schema({
         required: true,
         default: 'USER_ROLE',
         emun: ['ADMIN_ROLE', 'USER_ROLE']
-    },
-    estado: {
-        type: Boolean,
-        default: true
-    },
-    google: {
-        type: Boolean,
-        default: false
     },
 });
 
