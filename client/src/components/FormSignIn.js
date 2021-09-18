@@ -1,13 +1,17 @@
-import { useForm } from '../hooks/useForm'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useForm } from '../hooks/useForm'
 import { signIn } from '../store/slices/usuario'
 import FormSignUp from './FormSignUp'
 import { useHistory } from 'react-router'
+import useValidate from '../hooks/useValidate'
 
 const FormSignIn = () => {
 
 	const dispatch = useDispatch()
 	const history = useHistory()
+	const { validations, errors, showErrors, setShowErrors } = useValidate()
+	const [errorLogin, setErrorLogin] = useState(null)
 
 	const { form, onChange } = useForm({
 		email: '',
@@ -15,10 +19,23 @@ const FormSignIn = () => {
 		checkCrear: null
 	})
 
-	const handleSignIn = (e) => {
+	useEffect(() => {
+		validations(form)
+		setErrorLogin(null)
+	}, [form.email, form.password])
+
+	const handleSignIn = async (e) => {
 		e.preventDefault()
-		dispatch(signIn(form.email, form.password))
-		history.push('/')
+		setShowErrors(true)
+		if(!errors.length){
+			const error = await dispatch(signIn(form.email, form.password))
+			if(!error){
+				setErrorLogin(null)
+				history.push('/')
+			}
+			else
+				setErrorLogin(error)
+		}
 	}
 
 	return (
@@ -30,7 +47,10 @@ const FormSignIn = () => {
 							<div className="col-lg-12 col-md-12 col-12">
 								<div className="form-group">
 									<label>Email<span>*</span></label>
-									<input type="text" onChange={(e) => onChange(e.target.value,'email')} name="email" placeholder="" required="required"/>
+									<input  type="text" onChange={(e) => {onChange(e.target.value,'email')}} name="email"  />
+									{
+										showErrors && errors?.filter( err => err.includes('email')).map(err => <p key={err} className='text-danger'>{err}</p>)
+									}
 								</div>
 							</div>
 						</div>
@@ -38,13 +58,19 @@ const FormSignIn = () => {
 							<div className="col-lg-12 col-md-12 col-12">
 								<div className="form-group">
 									<label>Password<span>*</span></label>
-									<input type="password" onChange={(e) => onChange(e.target.value,'password')} name="password" placeholder="" required="required"/>
+									<input  type="password" minLength={6} onChange={(e) => onChange(e.target.value,'password')} name="password" placeholder="" />
+									{
+										showErrors && errors?.filter( err => err.includes('password')).map(err => <p key={err} className='text-danger'>{err}</p>)
+									}
 								</div>
 							</div>
 						</div>
 						{
+							errorLogin ? <p className='text-danger'>{errorLogin}</p> : ''
+						}
+						{
 							!form.checkCrear ?
-								<div className="col-lg-2 col-md-2 col-2">
+								<div className="col-lg-2 col-md-2 col-12">
 									<div className="form-group">
 										<button style={{position: 'relative', width: '100%'}} className="btnn" value="search" type="submit"> { form.checkCrear ? 'Crear cuenta': 'Ingresar'}</button>
 									</div>
@@ -64,7 +90,7 @@ const FormSignIn = () => {
 
 				{
 					form.checkCrear &&
-						<FormSignUp email={form.email} password={form.password} />
+						<FormSignUp email={form.email} password={form.password} setShowErrors={setShowErrors} errors={errors} />
 				}
 			</div>
 		</div>

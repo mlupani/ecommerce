@@ -26,7 +26,7 @@ const ShoppingItem = () => {
 								<div style={{display: 'flex', flexDirection: 'row'}}>
 									<div style={{display:'flex', justifyContent: 'space-evenly', flexDirection: 'column'}}>
 										<a onClick={(e) => substractCarrito(e, prod)} href="#" className="remove" title="Remover producto"><i className="fa fa-remove"></i></a>
-										<h4><a href="#">{prod.nombre}</a></h4>
+										<h4><Link to={`/product/${prod._id}`}>{prod.nombre}</Link></h4>
 										<p className="quantity">{prod.cantidad} x - <span className="amount">{prod.precio}</span></p>
 									</div>
 									<div style={{width:'50%', height: 'auto'}}>

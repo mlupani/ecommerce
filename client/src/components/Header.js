@@ -1,5 +1,4 @@
 import useHeaderScroll from '../hooks/useHeaderScroll'
-import TopBar from './TopBar'
 import HeaderMiddleInner from './HeaderMiddleInner'
 import HeaderInner from './HeaderInner'
 
@@ -11,7 +10,6 @@ const Header = () => {
 	return (
 
 		<header className={`header shop ${headerScroll ? 'sticky':''}`}>
-			<TopBar/>
 			<HeaderMiddleInner/>
 			<HeaderInner/>
 		</header>

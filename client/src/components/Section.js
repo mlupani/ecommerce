@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import useDevice from '../hooks/useDevice'
 
 function getRandomInt(min, max) {
@@ -45,7 +46,7 @@ const Section = () => {
 										<div className="content">
 											<p>{prod.categoria.nombre}</p>
 											<h3>{prod.nombre}</h3>
-											<a href="#">Descr&uacute;brelo</a>
+											<Link to={`/product/${prod._id}`}>Descr&uacute;brelo</Link>
 										</div>
 									</div>
 								</div>)

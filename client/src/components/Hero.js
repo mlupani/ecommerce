@@ -18,11 +18,11 @@ const Hero = () => {
 										<div className="text-inner" >
 											<div className="row">
 												<div className="col-lg-7 col-12">
-													<div className="hero-text" style={{borderRadius: '5%',padding: '35px',background: 'rgba(0,0,0,.6)'}}>
+													<div className="hero-text" style={{borderRadius: '5%',padding: '15px',background: 'rgba(0,0,0,.6)'}}>
 														<h1>{cat.nombre}</h1>
 														<b><p style={{color:'white'}}>{cat.descripcion}</p></b>
 														<div className="button">
-															<a href="#" className="btn">Comprar ahora!</a>
+															<a style={{width:'50%'}} href="#" className="btn">Comprar ahora!</a>
 														</div>
 													</div>
 												</div>

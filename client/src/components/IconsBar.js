@@ -32,7 +32,7 @@ const IconsBar = () => {
 							{
 								user === null ?
 									<div title='Ingresar' className="sinlge-bar">
-										<Link to="login" className="single-icon"><i className="fa fa-user-circle-o" aria-hidden="true"></i></Link>
+										<Link to="/login" className="single-icon"><i className="fa fa-user-circle-o" aria-hidden="true"></i></Link>
 									</div> :
 									<div title={user ? 'Mis datos':'Ingresar'} className="sinlge-bar shopping">
 										{
@@ -42,8 +42,8 @@ const IconsBar = () => {
 										}
 										<div className='shopping-item' style={{width: '150px'}}>
 											<ul>
-												<li><Link to="misDatos">Mis datos</Link></li>
-												<li><Link to="misCompras">Mis Compras</Link></li>
+												<li><Link to="/misDatos">Mis datos</Link></li>
+												<li><Link to="/misCompras">Mis Compras</Link></li>
 												<li><a href="#" title='Salir' onClick={logout} className="sinlge-bar">Salir</a></li>
 											</ul>
 										</div>

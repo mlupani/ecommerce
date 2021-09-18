@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import useCarrito from '../hooks/useCarrito'
 import useDevice from '../hooks/useDevice'
-import { useHistory } from 'react-router'
 import useFavoritos from '../hooks/useFavoritos'
 
 const TrendingTabs = () => {
 
 	const { addCarrito } = useCarrito()
-	const { addFavoritos, delFavoritos, favoritosIDs } = useFavoritos()
+	const { favoritosIDs, handleFavorito } = useFavoritos()
 	const isMobile = useDevice()
-	const history = useHistory()
 	const trendings = useSelector(({productos}) => productos.trendings)
-	const usuario = useSelector(({usuario}) => usuario)
 	const { categorias } = useSelector(({categorias}) => categorias )
 	const [categoriaActive, setCategoriaActive] = useState(null)
 
@@ -24,22 +22,6 @@ const TrendingTabs = () => {
 	const handleActiveTabs = (e,catID) => {
 		e.preventDefault()
 		setCategoriaActive(catID)
-	}
-
-	const handleFavorito = (e, producto, action) => {
-		e.preventDefault()
-
-		if(usuario.status === 'not-authenticated'){
-			history.push('/login')
-		}
-
-		if(usuario.status === 'authenticated'){
-			if(action === 'add')
-				addFavoritos(e, producto)
-
-			if(action === 'minus')
-				delFavoritos(e, producto)
-		}
 	}
 
 	return (
@@ -65,14 +47,13 @@ const TrendingTabs = () => {
 														return prod.categoria._id === cat._id &&
 																	<div key={prod._id} className="col-xl-3 col-lg-3 col-md-3 col-12" style={{maxHeight: '700px'}}>
 																		<div className="single-product" >
-																			<div className="product-img" style={{minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+																			<div className="product-img" style={{minHeight: `${isMobile ? '300px':'400px'}` , display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
 																				<a href="product-details.html">
-																					<img style={{width: `${!isMobile ? '70%':'50%' }`, marginLeft: `${isMobile ? '25%':'0px'}`}} className="default-img" src={prod.img} alt="#"/>
-																					<img style={{width: `${!isMobile ? '70%':'50%' }`, marginLeft: `${isMobile ? '25%':'0px'}`}}  className="hover-img" src={prod.img} alt="#"/>
+																					<img style={{width: `${!isMobile ? '70%':'50%' }`, marginBottom: `${isMobile ? '50px':'0px'}`}} className="default-img" src={prod.img} alt="#"/>
 																				</a>
 																				<div style={{bottom: `${isMobile ? '0px':''}`}} className="button-head">
 																					<div className="product-action">
-																						<a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i className=" ti-eye"></i><span>Ver producto</span></a>
+																						<Link data-toggle="modal" data-target="#exampleModal" title="Quick View" to={`/product/${prod._id}`}><i className=" ti-eye"></i><span>Ver producto</span></Link>
 																						{
 																							favoritosIDs.includes(prod._id) ?
 																								<a title="Wishlist" onClick={(e) => handleFavorito(e, prod, 'minus')} href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-heart-fill" viewBox="0 0 16 16">
@@ -95,8 +76,10 @@ const TrendingTabs = () => {
 																				</div>
 																			</div>
 																		</div>
+																		{
+																			isMobile && <hr></hr>
+																		}
 																	</div>
-
 													})
 												})
 											}

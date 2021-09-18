@@ -10,13 +10,14 @@ class Server {
         this.port = process.env.PORT;
 
         this.paths = {
-            auth:       '/api/auth',
-            carrito:    '/api/carrito',
-            categorias: '/api/categorias',
-            favoritos:  '/api/favoritos',
-            productos:  '/api/productos',
-            uploads:    '/api/uploads',
-            usuarios:   '/api/usuarios',
+            auth:           '/api/auth',
+            carrito:        '/api/carrito',
+            categorias:     '/api/categorias',
+            comentarios:    '/api/comentarios',
+            favoritos:      '/api/favoritos',
+            productos:      '/api/productos',
+            uploads:        '/api/uploads',
+            usuarios:       '/api/usuarios',
         }
 
 
@@ -59,6 +60,7 @@ class Server {
         this.app.use( this.paths.auth, require('../routes/auth'));
         this.app.use( this.paths.carrito, require('../routes/carrito'));
         this.app.use( this.paths.categorias, require('../routes/categorias'));
+        this.app.use( this.paths.comentarios, require('../routes/comentarios'));
         this.app.use( this.paths.favoritos, require('../routes/favoritos'));
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));

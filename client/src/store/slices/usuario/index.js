@@ -47,16 +47,30 @@ export const signIn = (correo, password) => async (dispatch) => {
 		const { token, usuario } = resp.data
 		dispatch(login({token, user: usuario}))
 		localStorage.setItem('token', token)
+		localStorage.removeItem('carrito')
+		return false
 
 	} catch (error) {
 		dispatch(addError(error.response.data.msg || 'Informacion incorrecta'))
+		return error.response.data.msg
 	}
 }
 
 export const signUp = ({name, email, password, apellido, telefono, pais, ciudad, address, img=null}) => async (dispatch) => {
 
+	//SUBO LA IMAGEN
+	const formData = new FormData()
+	formData.append('archivo', img)
+	let uploadImg = null
+
 	try {
-		const resp = await productosAPI.post('/usuarios', {nombre: name, correo: email, password, apellido, telefono, pais, ciudad, direccion:address, img})
+
+		if(img){
+			const respImg = await productosAPI.post('/uploads', formData)
+			uploadImg = await respImg.data
+		}
+
+		const resp = await productosAPI.post('/usuarios', {nombre: name, correo: email, password, apellido, telefono, pais, ciudad, direccion:address, img: uploadImg})
 		const { token, usuario } = resp.data
 		dispatch(login({token, user: usuario}))
 		localStorage.setItem('token', token)

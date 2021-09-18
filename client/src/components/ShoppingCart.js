@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import useCarrito from '../hooks/useCarrito'
+import useDevice from '../hooks/useDevice'
 import Preloder from './Preloder'
 
 const ShoppingCart = () => {
@@ -9,6 +10,7 @@ const ShoppingCart = () => {
 	const { status, carrito, total_dinero, envio } = useSelector(({carrito}) => carrito)
 	const { addCarrito, substractCarritoProduct, removeProductCarrito, calcularEnvio } = useCarrito()
 	const [shipping, setShipping] = useState(envio)
+	const isMobile = useDevice()
 
 	useEffect(() => {
 		calcularEnvio(shipping)
@@ -40,28 +42,41 @@ const ShoppingCart = () => {
 						{
 							carrito.length && status !== 'checking' ?
 								<table className="table shopping-summery">
-									<thead>
-										<tr className="main-hading">
-											<th>PRODUCTO</th>
-											<th>DESCRIPCION</th>
-											<th className="text-center">PRECIO UNIDAD</th>
-											<th className="text-center">CANTIDAD</th>
-											<th className="text-center">TOTAL</th>
-											<th className="text-center"><i className="ti-trash remove-icon"></i></th>
-										</tr>
-									</thead>
+									{
+										!isMobile &&
+											<thead>
+												<tr className="main-hading">
+													<th>PRODUCTO</th>
+													<th>DESCRIPCION</th>
+													<th className="text-center">PRECIO UNIDAD</th>
+													<th className="text-center">CANTIDAD</th>
+													<th className="text-center">TOTAL</th>
+													<th className="text-center"><i className="ti-trash remove-icon"></i></th>
+												</tr>
+											</thead>
+									}
 									<tbody>
 										{
 											carrito.map(prod =>
 												<tr key={prod._id} >
-													<td className="image" data-title="No"><img src={prod.img} alt="#"/></td>
-													<td className="product-des" data-title="Description">
-														<p className="product-name"><a href="#">{prod.nombre}</a></p>
-														<p className="product-des" title={prod.descripcion} style={{width: '500px', whiteSpace: 'nowrap', textOverflow: 'ellipsis',overflow: 'hidden'}}>{prod.descripcion}</p>
+													<td className="image" data-title="Producto"><img src={prod.img} alt="#"/>
+														{
+															isMobile && <p style={{marginTop: '10px', marginLeft: '10px'}} className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link><br></br>${prod.precio}</p>
+														}
 													</td>
-													<td className="price" data-title="Price"><span>${prod.precio}</span></td>
-													<td className="qty" data-title="Qty">
-														<div className="input-group">
+													<td className="product-des" data-title="Descripcion">
+														{
+															!isMobile && <p className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link></p>
+														}
+														{
+															!isMobile && <p className="product-des" title={prod.descripcion} style={{width: '500px', whiteSpace: 'nowrap', textOverflow: 'ellipsis',overflow: 'hidden'}}>{prod.descripcion}</p>
+														}
+													</td>
+													{
+														!isMobile && <td className="price" data-title="Precio unidad"><span>${prod.precio}</span></td>
+													}
+													<td className="qty" data-title="Cantidad" style={{display: isMobile ? 'flex' : 'table-cell', alignItems: 'center'}}>
+														<div className="input-group" >
 															<div className="button minus">
 																<button onClick={() => handleCantidadProductoButton('minus', prod)} id="minus" type="button" className="btn btn-primary btn-number" disabled={prod.cantidad === 1 ? true : false} data-type="minus" data-field="quant[1]">
 																	<i className="ti-minus"></i>
@@ -74,9 +89,17 @@ const ShoppingCart = () => {
 																</button>
 															</div>
 														</div>
+														{
+															isMobile && <div>
+																<a style={{marginLeft: '20px'}} onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a>
+															</div>
+														}
 													</td>
-													<td className="total-amount" data-title="Total"><span>{new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</span></td>
-													<td className="action" data-title="Remove"><a onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a></td>
+													<td className="total-amount" data-title="Total"><span>{isMobile && 'Total Producto: '}${new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</span></td>
+													{
+														!isMobile &&
+															<td className="action" data-title="Quitar"><a onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a></td>
+													}
 												</tr>
 											)
 										}
@@ -92,7 +115,7 @@ const ShoppingCart = () => {
 				</div>
 				{
 					carrito.length && status !== 'checking' ?
-						<div className="row">
+						<div className="row" style={{height: '300px'}}>
 							<div className="col-12">
 								<div className="total-amount">
 									<div className="row">

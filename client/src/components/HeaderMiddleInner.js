@@ -1,18 +1,24 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 import IconsBar from './IconsBar'
 import {Navbar, Nav } from 'react-bootstrap'
 import useDevice from '../hooks/useDevice'
+import { handleLogout } from '../store/slices/usuario'
+import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const animatedComponents = makeAnimated()
 
 const HeaderMiddleInner = () => {
 
+	const dispatch = useDispatch()
 	const { categorias } = useSelector(({categorias}) => categorias)
+	const usuario = useSelector(({usuario}) => usuario)
 	const isMobile = useDevice()
 	const [activeSearch, setActiveSearch] = useState(false)
+	const history = useHistory()
 
 	const customStyles = {
 		container: provided => ({
@@ -27,6 +33,12 @@ const HeaderMiddleInner = () => {
 		}),
 	}
 
+	const logout = (e) => {
+		e.preventDefault()
+		dispatch(handleLogout())
+		history.push('/')
+	}
+
 	return (
 		<div className="middle-inner">
 			<div className="container">
@@ -37,7 +49,7 @@ const HeaderMiddleInner = () => {
 
 								<Navbar style={{width: '100%', backgroundColor: 'white !important',display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}} bg="light" expand="lg">
 									<div className="logo" style={{display: 'flex'}}>
-										<a href="index.html"><img src="images/logo.png" alt="logo"/></a>
+										<Link to="/"><img src="/images/logo.png" alt="logo"/></Link>
 									</div>
 
 									<IconsBar/>
@@ -57,14 +69,23 @@ const HeaderMiddleInner = () => {
 									<Navbar.Collapse id="navbarScroll">
 										<Nav
 											className="mr-auto my-2 my-lg-0"
-											style={{ maxHeight: '200px', marginLeft: '2px', fontWeight: 'bold', fontSize: '16px' }}
+											style={{ maxHeight: '200px', marginLeft: '2px', fontWeight: 'bold', fontSize: '16px', width: '100%' }}
 											navbarScroll
 										>
 											<ul>
-												<li><Nav.Link style={{fontWeight: 'bold'}} href="#action1">Home</Nav.Link></li>
-												<li><Nav.Link style={{fontWeight: 'bold'}} href="#action2">Productos</Nav.Link></li>
-												<li><Nav.Link style={{fontWeight: 'bold'}} href="#" disabled>Contacto</Nav.Link>
-												</li>
+												<li><Link to="/"><Nav.Link style={{fontWeight: 'bold'}} href="#action1">Home</Nav.Link></Link></li>
+												<li><Link to="/categorias"><Nav.Link style={{fontWeight: 'bold'}} href="#action2">Categorias</Nav.Link></Link></li>
+												<li><Nav.Link style={{fontWeight: 'bold'}} href="#" >Contacto</Nav.Link></li>
+												{
+													usuario.status === 'authenticated' ?
+														<>
+															<li><Nav.Link style={{fontWeight: 'bold'}} href="/misDatos">Mis datos</Nav.Link></li>
+															<li><Nav.Link style={{fontWeight: 'bold'}} href="/wishlist">Mi lista de deseos</Nav.Link></li>
+															<li><Nav.Link style={{fontWeight: 'bold'}} href="#">Mis compras</Nav.Link></li>
+															<li><Nav.Link style={{fontWeight: 'bold'}} href="#" onClick={logout}>Salir</Nav.Link></li>
+														</> :
+														<li><Nav.Link style={{fontWeight: 'bold'}} href="login">Ingresar</Nav.Link></li>
+												}
 											</ul>
 										</Nav>
 									</Navbar.Collapse>

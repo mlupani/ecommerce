@@ -22,22 +22,18 @@ const UsuarioSchema = Schema({
     telefono: {
         type: String,
         required: [true, 'El telefono es obligatorio'],
-        unique: true
     },
     pais: {
         type: String,
         required: [true, 'El pais es obligatorio'],
-        unique: true
     },
     ciudad: {
         type: String,
         required: [true, 'La ciudad es obligatoria'],
-        unique: true
     },
     direccion: {
         type: String,
         required: [true, 'La direccion es obligatoria'],
-        unique: true
     },
     img: {
         type: String,

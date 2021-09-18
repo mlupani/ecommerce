@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Select from 'react-select'
 import { toast } from 'react-toastify'
 import { countryList } from '../data/countries'
 import { useForm } from '../hooks/useForm'
+import useProfileUser from '../hooks/useProfileUser'
 import { updateUser } from '../store/slices/usuario'
 import Preloder from './Preloder'
 
@@ -12,8 +13,7 @@ const FormEditUser = () => {
 	const dispatch = useDispatch()
 	const { user } = useSelector(({usuario}) => usuario)
 	const { form, onChange, setForm } = useForm()
-	const [ tempImg, setTempImg ] = useState(null)
-	const inputFile = useRef(null)
+	const { handleImage, handleImageForm, tempImg, inputFile} = useProfileUser(onChange)
 
 	useEffect(() => {
 		if(user){
@@ -31,22 +31,6 @@ const FormEditUser = () => {
 			})
 		}
 	}, [user])
-
-	const handleImage = (e) => {
-		e.preventDefault()
-		inputFile.current.click()
-	}
-
-	const handleImageForm = (file) => {
-		if (file) {
-			setTempImg(URL.createObjectURL(file))
-			onChange(file, 'imgFile')
-		}else{
-			setTempImg(null)
-			onChange(null, 'imgFile')
-			onChange(null, 'imagen')
-		}
-	}
 
 	const handleEditUser = (e) => {
 		e.preventDefault()
@@ -79,7 +63,7 @@ const FormEditUser = () => {
 						<div className="col-lg-6 col-md-6 col-12">
 							<div className="form-group">
 								<label>Password</label>
-								<input onChange={(e) => onChange(e.target.value, 'password')} value={form?.password} type="password" name="lastname" placeholder=""/>
+								<input onChange={(e) => onChange(e.target.value, 'password')} value={form?.password} type="password" name="lastname" placeholder="Si el password esta vacio no sera editado"/>
 							</div>
 						</div>
 						<div className="col-lg-6 col-md-6 col-12">

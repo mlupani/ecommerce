@@ -10,7 +10,7 @@ const Breadcrumb = ({routes}) => {
 							<ul className="bread-list">
 								<li><Link to="/">Home<i className="ti-arrow-right"></i></Link></li>
 								{
-									routes.map(route =>  <li key={route.name} className={route.active && 'active'}><Link to={`/${route.route}`}>{route.name} </Link></li>)
+									routes.map(route =>  <li key={route.name} className={route.active ? 'active':''}><Link to={`/${route.route}`}>{route.name} <i className="ti-arrow-right"></i></Link></li>)
 								}
 							</ul>
 						</div>

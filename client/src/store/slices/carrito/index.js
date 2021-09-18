@@ -28,7 +28,7 @@ export const carritoSlice = createSlice({
 				return producto
 			})
 			if (!find) {
-				state.carrito = [...(state.carrito || []), {...action.payload.producto, cantidad: 1}]
+				state.carrito = [...(state.carrito || []), {...action.payload.producto, cantidad: action.payload.cantidad}]
 			}
 			state.status = 'checked'
 		},

@@ -57,6 +57,22 @@ const obtenerProducto = async(req, res = response ) => {
 
 }
 
+const obtenerProductosByCategoria = async (req, res = response ) => {
+
+    const { id } = req.params;
+
+    const [ total, productos ] = await Promise.all([
+        Producto.countDocuments(),
+        Producto.find({ categoria: id})
+            .populate('categoria', 'nombre')
+    ]);
+
+    res.json({
+        total,
+        productos
+    });
+}
+
 const crearProducto = async(req, res = response ) => {
 
     const { estado, ...body } = req.body;
@@ -126,5 +142,6 @@ module.exports = {
     obtenerProducto,
     actualizarProducto,
     borrarProducto,
-    obtenerProductosTrending
+    obtenerProductosTrending,
+    obtenerProductosByCategoria
 }

@@ -11,11 +11,28 @@ const useFavoritos = () => {
 	const history = useHistory()
 	const { favoritos, favoritosIDs, status } = useSelector(state => state.favoritos)
 	const usuario = useSelector(state => state.usuario)
+	
 
 	useEffect(() => {
 		if(usuario.user)
 			dispatch(fetchAllFavoritos())
 	}, [usuario.user])
+
+	const handleFavorito = (e, producto, action) => {
+		e.preventDefault()
+
+		if(usuario.status === 'not-authenticated'){
+			history.push('/login')
+		}
+
+		if(usuario.status === 'authenticated'){
+			if(action === 'add')
+				addFavoritos(e, producto)
+
+			if(action === 'minus')
+				delFavoritos(e, producto)
+		}
+	}
 
 	const addFavoritos = (e, producto) =>{
 		if(e)	e.preventDefault()
@@ -56,7 +73,8 @@ const useFavoritos = () => {
 		favoritosIDs,
 		delFavoritos,
 		status,
-		favoritos
+		favoritos,
+		handleFavorito
 	}
 }
 

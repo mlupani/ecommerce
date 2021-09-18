@@ -23,6 +23,19 @@ const cargarArchivo = async(req, res = response) => {
 
 }
 
+const cargarArchivoCloudinary = async(req, res = response) => {
+
+    try {
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath,  options = {folder: 'ecommerce'} );
+        res.json(secure_url);
+
+    } catch (msg) {
+        res.status(400).json({ msg });
+    }
+
+}
+
 
 const actualizarImagen = async(req, res = response ) => {
 
@@ -201,5 +214,6 @@ module.exports = {
     cargarArchivo,
     actualizarImagen,
     mostrarImagen,
-    actualizarImagenCloudinary
+    actualizarImagenCloudinary,
+    cargarArchivoCloudinary
 }

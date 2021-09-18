@@ -7,7 +7,7 @@ const useCarrito = () => {
 
 	const dispatch = useDispatch()
 	const totalCarrito = useSelector(state => state.carrito)
-	const { carrito, cantidad, total_dinero } = totalCarrito
+	const { carrito, cantidad, total_dinero, status } = totalCarrito
 	const usuario = useSelector(state => state.usuario)
 
 	useEffect(() => {
@@ -23,17 +23,21 @@ const useCarrito = () => {
 			else
 				dispatch(restoreCarritoDB())
 		}
-	}, [usuario])
+	}, [usuario.status])
 
 	useEffect(() => {
-
 		dispatch(calcularCantidad())
 		dispatch(calcularDinero())
-
-		if(usuario.status === 'not-authenticated'){
+		if(usuario.status === 'not-authenticated' && status === 'checked'){
 			localStorage.setItem('carrito', JSON.stringify(totalCarrito))
 		}
-	}, [totalCarrito.carrito.length])
+	}, [carrito])
+
+	useEffect(() => {
+		if(usuario.status === 'not-authenticated' && status === 'checked'){
+			localStorage.setItem('carrito', JSON.stringify(totalCarrito))
+		}
+	}, [cantidad, total_dinero])
 
 	const substractCarrito = (e, producto) => {
 		e.preventDefault()

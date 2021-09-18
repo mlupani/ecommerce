@@ -22,7 +22,7 @@ const HeaderInner = () => {
 										<h3 className="cat-heading"><i className="fa fa-bars" aria-hidden="true"></i>CATEGORIAS</h3>
 										<ul className="main-category">
 											{
-												categorias.map(cat => <li key={cat._id}><a href="#">{cat.nombre}</a></li>)
+												categorias.map(cat => <li key={cat._id}><Link to={`categoria/${cat._id}`} >{cat.nombre}</Link></li>)
 											}
 										</ul>
 									</div>
@@ -35,7 +35,7 @@ const HeaderInner = () => {
 										<div className="nav-inner ">
 											<ul className="nav main-menu menu navbar-nav">
 												<li className="active"><Link className="enlaces_header" to="/">Home</Link></li>
-												<li><a className="enlaces_header" href="#">Productos</a></li>
+												<li><Link className="enlaces_header" to="/categorias">Categorias</Link></li>
 												<li><a className="enlaces_header" href="contact.html">Contacto</a></li>
 												{
 													headerScroll &&

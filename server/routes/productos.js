@@ -8,7 +8,8 @@ const { crearProducto,
         obtenerProducto,
         actualizarProducto, 
         borrarProducto,
-        obtenerProductosTrending } = require('../controllers/productos');
+        obtenerProductosTrending,
+        obtenerProductosByCategoria } = require('../controllers/productos');
 
 const { existeCategoriaPorId, existeProductoPorId } = require('../helpers/db-validators');
 
@@ -20,6 +21,11 @@ const router = Router();
 
 //  Obtener todos los productos - publico
 router.get('/', obtenerProductos );
+
+router.get('/categoria/:id', [
+    check('id', 'No es un id de Mongo válido').isMongoId(),
+    check('categoria').custom( existeCategoriaPorId ),
+], obtenerProductosByCategoria );
 
 //  Obtener todos los productos agrupados por categoria
 router.get('/trending', obtenerProductosTrending );
