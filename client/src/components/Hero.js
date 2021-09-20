@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Fade } from 'react-slideshow-image'
+import { Link } from 'react-router-dom'
 import 'react-slideshow-image/dist/styles.css'
 
 const Hero = () => {
@@ -22,7 +23,7 @@ const Hero = () => {
 														<h1>{cat.nombre}</h1>
 														<b><p style={{color:'white'}}>{cat.descripcion}</p></b>
 														<div className="button">
-															<a style={{width:'50%'}} href="#" className="btn">Comprar ahora!</a>
+															<Link style={{width:'50%'}} to={`/categoria/${cat._id}`} className="btn">Comprar ahora!</Link>
 														</div>
 													</div>
 												</div>

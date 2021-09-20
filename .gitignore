@@ -4,6 +4,9 @@ server/node_modules/
 client/build
 server/build
 
+#scripts
+client/src/scripts/
+
 # misc
 .DS_Store
 *.pem

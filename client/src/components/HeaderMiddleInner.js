@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -8,8 +8,27 @@ import useDevice from '../hooks/useDevice'
 import { handleLogout } from '../store/slices/usuario'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
+import { InstantSearch, Configure, connectSearchBox, connectHits  } from 'react-instantsearch-dom'
+import { algoliaClient, ALGOLIA_INDEX_NAME } from '../services/algolia'
 
 const animatedComponents = makeAnimated()
+
+const SearchBox = ({ currentRefinement, funcion }) => (
+	<form>
+		<input autoComplete='off' value={currentRefinement} onChange={event => funcion(event.target.value)} name="search" placeholder="Buscar productos" type="search"/>
+		<button style={{height: '49px'}} className="btnn"><i className="ti-search"></i></button>
+	</form>
+)
+
+const SearchBoxMobile = ({ currentRefinement, funcion }) => (
+	<div className="search-top input">
+		<form className="search-form">
+			<input autoComplete='off' value={currentRefinement} onChange={event => funcion(event.target.value)} type="text" placeholder="Search here..." name="search"/>
+			<button style={{height: '49px'}} value="search" type="submit"><i className="ti-search"></i></button>
+		</form>
+	</div>
+)
+
 
 const HeaderMiddleInner = () => {
 
@@ -19,11 +38,13 @@ const HeaderMiddleInner = () => {
 	const isMobile = useDevice()
 	const [activeSearch, setActiveSearch] = useState(false)
 	const history = useHistory()
+	const [search, setSearch] = useState('')
+	const [selectedCategory, setSelectedCategory] = useState(null)
 
 	const customStyles = {
 		container: provided => ({
 			...provided,
-			width: 150,
+			width: 205,
 			height: 48,
 		}),
 		valueContainer: (provided) => ({
@@ -39,6 +60,34 @@ const HeaderMiddleInner = () => {
 		history.push('/')
 	}
 
+	const handleChange = (value) => {
+		setSearch(value)
+	}
+
+	const handleChangeCategory = ({value}) => {
+		setSelectedCategory(value)
+	}
+
+	const Hits = ({ hits }) => {
+		return hits.filter(hit => selectedCategory === hit.categoria._id || !selectedCategory).map(hit => (
+			<Link key={hit._id} to={`/product/${hit._id}`}>
+				<div style={{display:'flex', flexDirection: 'row', backgroundColor: 'white', padding: '20px'}}>
+					<div style={{width: '100px'}}>
+						<img style={{width:'50%', heigth: 'auto'}} src={hit.img}></img>
+					</div>
+					<div style={{width: '185px'}}>
+						<p>{hit.nombre}</p>
+						<h6>$ {hit.precio}</h6>
+					</div>
+				</div>
+			</Link>
+		))
+	}
+
+	const CustomSearchBox = useCallback(connectSearchBox(SearchBox),[])
+	const CustomSearchBoxMobile = useCallback(connectSearchBox(SearchBoxMobile), [])
+	const CustomHits = useCallback(connectHits(Hits),[selectedCategory])
+
 	return (
 		<div className="middle-inner">
 			<div className="container">
@@ -48,6 +97,7 @@ const HeaderMiddleInner = () => {
 							<div className="col-lg-2 col-md-12 col-12">
 
 								<Navbar style={{width: '100%', backgroundColor: 'white !important',display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}} bg="light" expand="lg">
+
 									<div className="logo" style={{display: 'flex'}}>
 										<Link to="/"><img src="/images/logo.png" alt="logo"/></Link>
 									</div>
@@ -57,12 +107,20 @@ const HeaderMiddleInner = () => {
 									<div className={`search-top ${activeSearch ? 'active':''}`} style={{display: 'flex'}}>
 										<div className="top-search"><a onClick={(e) => { e.preventDefault();setActiveSearch(!activeSearch)}} href="#0"><i style={{fontSize: `${isMobile ? '21px':'' }` }} className="ti-search"></i></a></div>
 
-										<div className="search-top input">
-											<form className="search-form">
-												<input type="text" placeholder="Search here..." name="search"/>
-												<button value="search" type="submit"><i className="ti-search"></i></button>
-											</form>
-										</div>
+										<InstantSearch searchClient={algoliaClient} indexName={ALGOLIA_INDEX_NAME} hitsPerPage={3}>
+											<CustomSearchBoxMobile  defaultRefinement={search} funcion={handleChange} showLoadingIndicator />
+											{
+												search.length >=  3 ?
+													<div style={{marginTop: '80px', height: '400px', overflowY: 'scroll'}}>
+														<CustomHits />
+													</div> : ''
+											}
+											<Configure
+												hitsPerPage={4}
+												analytics={false}
+												enablePersonalization={false}
+											/>
+										</InstantSearch>
 
 									</div>
 									<Navbar.Toggle aria-controls="navbarScroll" />
@@ -96,25 +154,41 @@ const HeaderMiddleInner = () => {
 					{
 						!isMobile &&
 						<>
-							<div className="col-lg-8 col-md-7 col-12">
+							<div className="col-lg-8 col-md-7 col-12" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+
+								<a style={{cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); window.open('https://www.algolia.com', '_blank')}}><img width={150} src="https://upload.wikimedia.org/wikipedia/commons/6/69/Algolia-logo.svg"></img></a>
+
 								<div className="search-bar-top">
-									<div className="search-bar" style={{display: 'flex', flexDirection: 'row',alignItems: 'center', marginLeft: '20%',zIndex: '99999'}}>
-										{
-											<Select
-												styles={customStyles}
-												components={animatedComponents}
-												options={categorias.map(cat => {
-													return {
-														value: cat._id,
-														label: cat.nombre
+									<div className="search-bar" style={{display: 'flex', flexDirection: 'row',zIndex: '99999'}}>
+
+										<Select
+											styles={customStyles}
+											components={animatedComponents}
+											selected={selectedCategory}
+											onChange={handleChangeCategory}
+											options={[{value: '', label: 'TODAS'}].concat(categorias.map(cat => {
+												return {
+													value: cat._id,
+													label: cat.nombre
+												}
+											}))}
+										/>
+										<div style={{display: 'flex', flexDirection: 'column'}}>
+											{
+												<InstantSearch searchClient={algoliaClient} indexName={ALGOLIA_INDEX_NAME} hitsPerPage={3}>
+													<CustomSearchBox  defaultRefinement={search} funcion={handleChange} showLoadingIndicator />
+													{
+														search.length >=  3 ?
+															<CustomHits /> : ''
 													}
-												})}
-											/>
-										}
-										<form>
-											<input name="search" placeholder="Buscar productos" type="search"/>
-											<button className="btnn"><i className="ti-search"></i></button>
-										</form>
+													<Configure
+														hitsPerPage={4}
+														analytics={false}
+														enablePersonalization={false}
+													/>
+												</InstantSearch>
+											}
+										</div>
 									</div>
 								</div>
 							</div>

@@ -48,9 +48,9 @@ const TrendingTabs = () => {
 																	<div key={prod._id} className="col-xl-3 col-lg-3 col-md-3 col-12" style={{maxHeight: '700px'}}>
 																		<div className="single-product" >
 																			<div className="product-img" style={{minHeight: `${isMobile ? '300px':'400px'}` , display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-																				<a href="product-details.html">
+																				<Link to={`product/${prod._id}`}>
 																					<img style={{width: `${!isMobile ? '70%':'50%' }`, marginBottom: `${isMobile ? '50px':'0px'}`}} className="default-img" src={prod.img} alt="#"/>
-																				</a>
+																				</Link>
 																				<div style={{bottom: `${isMobile ? '0px':''}`}} className="button-head">
 																					<div className="product-action">
 																						<Link data-toggle="modal" data-target="#exampleModal" title="Quick View" to={`/product/${prod._id}`}><i className=" ti-eye"></i><span>Ver producto</span></Link>
