@@ -44,7 +44,7 @@ const ShoppingItem = () => {
 							<span>Total</span>
 							<span className="total-amount">$ {total_dinero}</span>
 						</div>
-						<a href="checkout.html" className="btn animate">Pagar</a>
+						<Link to="/checkout" className="btn animate">Pagar</Link>
 					</div>  : ''
 			}
 		</div>

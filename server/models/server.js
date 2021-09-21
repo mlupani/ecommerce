@@ -15,6 +15,7 @@ class Server {
             categorias:     '/api/categorias',
             comentarios:    '/api/comentarios',
             favoritos:      '/api/favoritos',
+            pagos:          '/api/pagos',
             productos:      '/api/productos',
             uploads:        '/api/uploads',
             usuarios:       '/api/usuarios',
@@ -62,6 +63,7 @@ class Server {
         this.app.use( this.paths.categorias, require('../routes/categorias'));
         this.app.use( this.paths.comentarios, require('../routes/comentarios'));
         this.app.use( this.paths.favoritos, require('../routes/favoritos'));
+        this.app.use( this.paths.pagos, require('../routes/pagos'));
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));

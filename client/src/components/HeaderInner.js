@@ -36,7 +36,6 @@ const HeaderInner = () => {
 											<ul className="nav main-menu menu navbar-nav">
 												<li className="active"><Link className="enlaces_header" to="/">Home</Link></li>
 												<li><Link className="enlaces_header" to="/categorias">Categorias</Link></li>
-												<li><a className="enlaces_header" href="contact.html">Contacto</a></li>
 												{
 													headerScroll &&
 															<li>

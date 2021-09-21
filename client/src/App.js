@@ -3,10 +3,13 @@ import { useDispatch } from 'react-redux'
 import HomePage from './pages/HomePage'
 import CartPage from './pages/CartPage'
 import CategoriasPage from './pages/CategoriasPage'
+import CheckoutPage from './pages/CheckoutPage'
 import LoginPage from './pages/LoginPage'
 import WishListPage from './pages/WishListPage'
 import MisDatosPage from './pages/MisDatosPage'
+import MisComprasPage from './pages/MisComprasPage'
 import ProductDetailPage from './pages/ProductDetailPage'
+import ProductListPage from './pages/ProductListPage'
 import { checkToken } from './store/slices/usuario'
 import { fetchAllCategories } from './store/slices/categorias'
 import {
@@ -14,7 +17,6 @@ import {
 	Switch,
 	Route
 } from 'react-router-dom'
-import ProductListPage from './pages/ProductListPage'
 
 function App() {
 
@@ -35,6 +37,9 @@ function App() {
 				<Route path="/cart">
 					<CartPage />
 				</Route>
+				<Route path="/checkout">
+					<CheckoutPage />
+				</Route>
 				<Route path="/login">
 					<LoginPage />
 				</Route>
@@ -49,6 +54,9 @@ function App() {
 				</Route>
 				<Route path="/misDatos">
 					<MisDatosPage />
+				</Route>
+				<Route path="/misCompras">
+					<MisComprasPage />
 				</Route>
 				<Route path="/Product/:id">
 					<ProductDetailPage />

@@ -96,7 +96,7 @@ const HeaderMiddleInner = () => {
 						isMobile &&
 							<div className="col-lg-2 col-md-12 col-12">
 
-								<Navbar style={{width: '100%', backgroundColor: 'white !important',display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}} bg="light" expand="lg">
+								<Navbar style={{width: '100%', backgroundColor: 'white !important',display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}} bg="light" expand="lg">
 
 									<div className="logo" style={{display: 'flex'}}>
 										<Link to="/"><img src="/images/logo.png" alt="logo"/></Link>
@@ -133,13 +133,12 @@ const HeaderMiddleInner = () => {
 											<ul>
 												<li><Link to="/"><Nav.Link style={{fontWeight: 'bold'}} href="#action1">Home</Nav.Link></Link></li>
 												<li><Link to="/categorias"><Nav.Link style={{fontWeight: 'bold'}} href="#action2">Categorias</Nav.Link></Link></li>
-												<li><Nav.Link style={{fontWeight: 'bold'}} href="#" >Contacto</Nav.Link></li>
 												{
 													usuario.status === 'authenticated' ?
 														<>
 															<li><Nav.Link style={{fontWeight: 'bold'}} href="/misDatos">Mis datos</Nav.Link></li>
 															<li><Nav.Link style={{fontWeight: 'bold'}} href="/wishlist">Mi lista de deseos</Nav.Link></li>
-															<li><Nav.Link style={{fontWeight: 'bold'}} href="#">Mis compras</Nav.Link></li>
+															<li><Nav.Link style={{fontWeight: 'bold'}} href="/misCompras">Mis compras</Nav.Link></li>
 															<li><Nav.Link style={{fontWeight: 'bold'}} href="#" onClick={logout}>Salir</Nav.Link></li>
 														</> :
 														<li><Nav.Link style={{fontWeight: 'bold'}} href="login">Ingresar</Nav.Link></li>
@@ -154,7 +153,7 @@ const HeaderMiddleInner = () => {
 					{
 						!isMobile &&
 						<>
-							<div className="col-lg-8 col-md-7 col-12" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+							<div className="col-lg-8 col-md-7 col-12" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
 								<a style={{cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); window.open('https://www.algolia.com', '_blank')}}><img width={150} src="https://upload.wikimedia.org/wikipedia/commons/6/69/Algolia-logo.svg"></img></a>
 

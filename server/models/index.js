@@ -4,6 +4,7 @@ const Categoria = require('./categoria');
 const Carrito = require('./carrito');
 const Comentario = require('./comentario');
 const Favoritos = require('./favoritos');
+const Pagos = require('./pagos');
 const Producto = require('./producto');
 const Role = require('./role');
 const Server = require('./server');
@@ -16,6 +17,7 @@ module.exports = {
     Categoria,
     Comentario,
     Favoritos,
+    Pagos,
     Producto,
     Role,
     Server,

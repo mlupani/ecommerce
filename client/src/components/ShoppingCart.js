@@ -5,9 +5,9 @@ import useCarrito from '../hooks/useCarrito'
 import useDevice from '../hooks/useDevice'
 import Preloder from './Preloder'
 
-const ShoppingCart = () => {
+const ShoppingCart = ({end = false, endAction}) => {
 
-	const { status, carrito, total_dinero, envio } = useSelector(({carrito}) => carrito)
+	const { status, carrito, total_dinero, envio, cantidad } = useSelector(({carrito}) => carrito)
 	const { addCarrito, substractCarritoProduct, removeProductCarrito, calcularEnvio } = useCarrito()
 	const [shipping, setShipping] = useState(envio)
 	const isMobile = useDevice()
@@ -51,7 +51,9 @@ const ShoppingCart = () => {
 													<th className="text-center">PRECIO UNIDAD</th>
 													<th className="text-center">CANTIDAD</th>
 													<th className="text-center">TOTAL</th>
-													<th className="text-center"><i className="ti-trash remove-icon"></i></th>
+													{
+														!end && <th className="text-center"><i className="ti-trash remove-icon"></i></th>
+													}
 												</tr>
 											</thead>
 									}
@@ -76,19 +78,22 @@ const ShoppingCart = () => {
 														!isMobile && <td className="price" data-title="Precio unidad"><span>${prod.precio}</span></td>
 													}
 													<td className="qty" data-title="Cantidad" style={{display: isMobile ? 'flex' : 'table-cell', alignItems: 'center'}}>
-														<div className="input-group" >
-															<div className="button minus">
-																<button onClick={() => handleCantidadProductoButton('minus', prod)} id="minus" type="button" className="btn btn-primary btn-number" disabled={prod.cantidad === 1 ? true : false} data-type="minus" data-field="quant[1]">
-																	<i className="ti-minus"></i>
-																</button>
-															</div>
-															<input type="text" onChange={(e) => handleCantidadProducto(e.target.value, prod)} name="quant[1]" className="input-number" value={prod.cantidad}  data-min="1" data-max="100" />
-															<div   className="button plus">
-																<button onClick={() => handleCantidadProductoButton('plus', prod)} id="plus" type="button" className="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-																	<i  className="ti-plus"></i>
-																</button>
-															</div>
-														</div>
+														{
+															!end ? 
+																<div className="input-group" >
+																	<div className="button minus">
+																		<button onClick={() => handleCantidadProductoButton('minus', prod)} id="minus" type="button" className="btn btn-primary btn-number" disabled={prod.cantidad === 1 ? true : false} data-type="minus" data-field="quant[1]">
+																			<i className="ti-minus"></i>
+																		</button>
+																	</div>
+																	<input type="text" onChange={(e) => handleCantidadProducto(e.target.value, prod)} name="quant[1]" className="input-number" value={prod.cantidad}  data-min="1" data-max="100" />
+																	<div   className="button plus">
+																		<button onClick={() => handleCantidadProductoButton('plus', prod)} id="plus" type="button" className="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+																			<i  className="ti-plus"></i>
+																		</button>
+																	</div>
+																</div> : cantidad
+														}
 														{
 															isMobile && <div>
 																<a style={{marginLeft: '20px'}} onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a>
@@ -97,7 +102,7 @@ const ShoppingCart = () => {
 													</td>
 													<td className="total-amount" data-title="Total"><span>{isMobile && 'Total Producto: '}${new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</span></td>
 													{
-														!isMobile &&
+														!isMobile && !end &&
 															<td className="action" data-title="Quitar"><a onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a></td>
 													}
 												</tr>
@@ -122,9 +127,12 @@ const ShoppingCart = () => {
 										<div className="col-lg-8 col-md-5 col-12">
 											<div className="left">
 												<div className="checkbox">
-													<label className={`checkbox-inline ${shipping ? 'checked':''}`} htmlFor="2">
-														<input onChange={() => setShipping(prev => prev === 200 ? 0 : 200)} name="news" id="2" type="checkbox"/> Envio (+200$)
-													</label>
+													{
+														!end &&
+															<label className={`checkbox-inline ${shipping ? 'checked':''}`} htmlFor="2">
+																<input onChange={() => setShipping(prev => prev === 200 ? 0 : 200)} name="news" id="2" type="checkbox"/> Envio (+200$)
+															</label>
+													}
 												</div>
 											</div>
 										</div>
@@ -135,10 +143,16 @@ const ShoppingCart = () => {
 													<li>Envio<span>{shipping ? `$ ${shipping}` : 'Gratis'} </span></li>
 													<li className="last">Tu pago<span>$ {total_dinero + envio}</span></li>
 												</ul>
-												<div className="button5">
-													<Link to="#" className="btn">Acceder al pago</Link>
-													<Link to="/" className="btn">Continuar comprando</Link>
-												</div>
+												{
+													!end ?
+														<div className="button5">
+															<Link to="/checkout" className="btn">Acceder al pago</Link>
+															<Link to="/" className="btn">Continuar comprando</Link>
+														</div> :
+														<div className="button5">
+															<button style={{padding: '10px'}} className="btn" onClick={endAction} >Pagar y Finalizar compra</button>
+														</div>
+												}
 											</div>
 										</div>
 									</div>
