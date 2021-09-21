@@ -13,16 +13,16 @@ import { algoliaClient, ALGOLIA_INDEX_NAME } from '../services/algolia'
 
 const animatedComponents = makeAnimated()
 
-const SearchBox = ({ currentRefinement, funcion }) => (
-	<form>
+const SearchBox = ({ currentRefinement, funcion, submitFunction }) => (
+	<form onSubmit={submitFunction}>
 		<input autoComplete='off' value={currentRefinement} onChange={event => funcion(event.target.value)} name="search" placeholder="Buscar productos" type="search"/>
-		<button style={{height: '49px'}} className="btnn"><i className="ti-search"></i></button>
+		<button  style={{height: '49px'}} className="btnn"><i className="ti-search"></i></button>
 	</form>
 )
 
-const SearchBoxMobile = ({ currentRefinement, funcion }) => (
+const SearchBoxMobile = ({ currentRefinement, funcion, submitFunction }) => (
 	<div className="search-top input">
-		<form className="search-form">
+		<form onSubmit={submitFunction} className="search-form">
 			<input autoComplete='off' value={currentRefinement} onChange={event => funcion(event.target.value)} type="text" placeholder="Search here..." name="search"/>
 			<button style={{height: '49px'}} value="search" type="submit"><i className="ti-search"></i></button>
 		</form>
@@ -39,7 +39,7 @@ const HeaderMiddleInner = () => {
 	const [activeSearch, setActiveSearch] = useState(false)
 	const history = useHistory()
 	const [search, setSearch] = useState('')
-	const [selectedCategory, setSelectedCategory] = useState(null)
+	const [selectedCategory, setSelectedCategory] = useState('')
 
 	const customStyles = {
 		container: provided => ({
@@ -68,6 +68,12 @@ const HeaderMiddleInner = () => {
 		setSelectedCategory(value)
 	}
 
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		history.replace(`/buscar/${search}/${selectedCategory}`)
+		return
+	}
+
 	const Hits = ({ hits }) => {
 		return hits.filter(hit => selectedCategory === hit.categoria._id || !selectedCategory).map(hit => (
 			<Link key={hit._id} to={`/product/${hit._id}`}>
@@ -87,6 +93,7 @@ const HeaderMiddleInner = () => {
 	const CustomSearchBox = useCallback(connectSearchBox(SearchBox),[])
 	const CustomSearchBoxMobile = useCallback(connectSearchBox(SearchBoxMobile), [])
 	const CustomHits = useCallback(connectHits(Hits),[selectedCategory])
+	
 
 	return (
 		<div className="middle-inner">
@@ -108,7 +115,7 @@ const HeaderMiddleInner = () => {
 										<div className="top-search"><a onClick={(e) => { e.preventDefault();setActiveSearch(!activeSearch)}} href="#0"><i style={{fontSize: `${isMobile ? '21px':'' }` }} className="ti-search"></i></a></div>
 
 										<InstantSearch searchClient={algoliaClient} indexName={ALGOLIA_INDEX_NAME} hitsPerPage={3}>
-											<CustomSearchBoxMobile  defaultRefinement={search} funcion={handleChange} showLoadingIndicator />
+											<CustomSearchBoxMobile  defaultRefinement={search} funcion={handleChange} showLoadingIndicator submitFunction={handleSubmit} />
 											{
 												search.length >=  3 ?
 													<div style={{marginTop: '80px', height: '400px', overflowY: 'scroll'}}>
@@ -175,9 +182,9 @@ const HeaderMiddleInner = () => {
 										<div style={{display: 'flex', flexDirection: 'column'}}>
 											{
 												<InstantSearch searchClient={algoliaClient} indexName={ALGOLIA_INDEX_NAME} hitsPerPage={3}>
-													<CustomSearchBox  defaultRefinement={search} funcion={handleChange} showLoadingIndicator />
+													<CustomSearchBox submitFunction={handleSubmit}  defaultRefinement={search} funcion={handleChange} showLoadingIndicator />
 													{
-														search.length >=  3 ?
+														search.length >=  3 && !history.location.pathname.includes('buscar') ?
 															<CustomHits /> : ''
 													}
 													<Configure

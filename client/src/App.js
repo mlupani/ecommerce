@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import HomePage from './pages/HomePage'
+import BuscarPage from './pages/BuscarPage'
 import CartPage from './pages/CartPage'
 import CategoriasPage from './pages/CategoriasPage'
 import CheckoutPage from './pages/CheckoutPage'
@@ -36,6 +37,12 @@ function App() {
 			<Switch>
 				<Route path="/cart">
 					<CartPage />
+				</Route>
+				<Route path="/buscar/:termino/:categoria">
+					<BuscarPage />
+				</Route>
+				<Route path="/buscar/:termino">
+					<BuscarPage />
 				</Route>
 				<Route path="/checkout">
 					<CheckoutPage />

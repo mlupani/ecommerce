@@ -53,9 +53,9 @@ const buscarCategorias = async( termino = '', res = response ) => {
 
 }
 
-const buscarProductos = async( termino = '', res = response ) => {
+const buscarProductos = async( termino = '', categoria='', res = response ) => {
 
-    const esMongoID = ObjectId.isValid( termino ); // TRUE 
+    const esMongoID = ObjectId.isValid( termino ); // TRUE
 
     if ( esMongoID ) {
         const producto = await Producto.findById(termino)
@@ -66,8 +66,19 @@ const buscarProductos = async( termino = '', res = response ) => {
     }
 
     const regex = new RegExp( termino, 'i' );
-    const productos = await Producto.find({ nombre: regex, estado: true })
-                            .populate('categoria','nombre')
+
+    let productos
+    if(!categoria){
+        productos = await Producto.find({ $or:[ {nombre:regex}, {descripcion:regex}]})
+                                .populate('categoria','nombre')
+    }
+    else{
+        productos = await Producto.find({  $and: [
+                                            { $or: [ {nombre:regex}, {descripcion:regex}] },
+                                            { categoria: categoria }
+                                        ]})
+                                .populate('categoria','nombre')
+    }
 
     res.json({
         results: productos
@@ -77,8 +88,8 @@ const buscarProductos = async( termino = '', res = response ) => {
 
 
 const buscar = ( req, res = response ) => {
-    
-    const { coleccion, termino  } = req.params;
+
+    const { coleccion, termino, categoria  } = req.params;
 
     if ( !coleccionesPermitidas.includes( coleccion ) ) {
         return res.status(400).json({
@@ -94,7 +105,7 @@ const buscar = ( req, res = response ) => {
             buscarCategorias(termino, res);
         break;
         case 'productos':
-            buscarProductos(termino, res);
+            buscarProductos(termino, categoria, res);
         break;
 
         default:

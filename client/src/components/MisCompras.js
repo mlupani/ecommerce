@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchCompras } from '../api/productos'
+import useDevice from '../hooks/useDevice'
 
 const MisCompras = () => {
 
 	const { user } = useSelector(({usuario}) => usuario)
 	const [compras, setCompras] = useState(null)
+	const isMobile = useDevice()
 
 	useEffect(() => {
 		if(user?.uid){
@@ -38,13 +40,13 @@ const MisCompras = () => {
 												<td>
 													<ul>
 														{
-															comp.productos.map(prod => <li key={prod._id}><Link to={`/product/${prod._id}`}><div style={{display: 'flex', flexDirection: 'row', textAlign: 'center', alignItems: 'center', marginBottom: '15px'}}><img style={{width: '5%', height: 'auto', marginRight: '15px'}} src={prod.img}></img> {prod.nombre} - $ {prod.precio} x {prod.cantidad} </div></Link></li>)
+															comp.productos.map(prod => <li key={prod._id}><Link to={`/product/${prod._id}`}><div style={{display: 'flex', flexDirection: 'row', textAlign: 'center', alignItems: 'center', marginBottom: '15px'}}><img style={{width: `${isMobile ? '15%' : '5%'}`, height: 'auto', marginRight: '15px'}} src={prod.img}></img> {prod.nombre} - $ {prod.precio} x {prod.cantidad} </div></Link></li>)
 														}
 													</ul>
 												</td>
-												<td>$ {comp.monto}</td>
-												<td>{comp.metodo}</td>
-												<td>{comp.estado}</td>
+												<td>{isMobile ? `Total pagado: $${comp.monto}` : `$${comp.monto}`}</td>
+												<td>{isMobile ? `Metodo de pago: ${comp.metodo}` : comp.metodo}</td>
+												<td>{isMobile ? `Estado: ${comp.estado}` : comp.estado}</td>
 											</tr>
 										)
 									})

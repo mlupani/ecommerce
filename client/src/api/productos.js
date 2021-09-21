@@ -33,5 +33,13 @@ export const fetchCompras = async (callback) => {
 	})
 }
 
+export const searchProducts = async (termino, categoria='', callback) => {
+	console.log(categoria)
+	productosAPI.get(`buscar/productos/${termino}/${categoria}`).then(res => {
+		const data = res.data.results
+		callback(data)
+	})
+}
+
 
 export default productosAPI

@@ -7,7 +7,7 @@ import Preloder from './Preloder'
 
 const ShoppingCart = ({end = false, endAction}) => {
 
-	const { status, carrito, total_dinero, envio, cantidad } = useSelector(({carrito}) => carrito)
+	const { status, carrito, total_dinero, envio } = useSelector(({carrito}) => carrito)
 	const { addCarrito, substractCarritoProduct, removeProductCarrito, calcularEnvio } = useCarrito()
 	const [shipping, setShipping] = useState(envio)
 	const isMobile = useDevice()
@@ -92,10 +92,10 @@ const ShoppingCart = ({end = false, endAction}) => {
 																			<i  className="ti-plus"></i>
 																		</button>
 																	</div>
-																</div> : cantidad
+																</div> : `x ${prod.cantidad}`
 														}
 														{
-															isMobile && <div>
+															isMobile && !end && <div>
 																<a style={{marginLeft: '20px'}} onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a>
 															</div>
 														}
