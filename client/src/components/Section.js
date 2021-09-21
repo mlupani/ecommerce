@@ -40,10 +40,10 @@ const Section = () => {
 							if(randNumbers.includes(i))
 								return (<div key={prod._id} className="col-lg-4 col-md-6 col-12">
 									<div className="single-banner" style={{borderRadius: '5%', border: '2px solid #f7941d', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: '250px', alignItems: 'center', padding: '10px'}}>
-										<div >
-											<img style={{width: '50%', height: 'auto'}} src={prod.img} alt="#" />
+										<div>
+											<img style={{width: '10rem', height: 'auto'}} src={prod.img} alt="#" />
 										</div>
-										<div className="content">
+										<div className="content" style={{width: '600px', paddingLeft: '20px'}}>
 											<p>{prod.categoria.nombre}</p>
 											<h3>{prod.nombre}</h3>
 											<Link to={`/product/${prod._id}`}>Descr&uacute;brelo</Link>
