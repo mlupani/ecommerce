@@ -5,7 +5,7 @@ const useDevice = () => {
 	const [isMobile, setIsMobile] = useState(false)
 
 	useEffect(() => {
-		setIsMobile(window.innerWidth < 991 ? true : false)
+		setIsMobile(window.outerWidth < 991 ? true : false)
 		window.addEventListener('resize', resize)
 		return () => removeEventListener('resize', resize)
 	}, [])

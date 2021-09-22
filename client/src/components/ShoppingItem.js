@@ -7,7 +7,7 @@ const ShoppingItem = () => {
 
 	const { carrito, total_dinero, cantidad } = useSelector(({carrito}) => carrito)
 	const { substractCarrito } = useCarrito()
-	const isMobile = useDevice()
+	const isMobile = useDevice(false)
 
 	return (
 		<div className="shopping-item" style={{right: `${isMobile ? 'auto':'-30px'}`}}>
@@ -42,7 +42,7 @@ const ShoppingItem = () => {
 					<div className="bottom">
 						<div className="total">
 							<span>Total</span>
-							<span className="total-amount">$ {total_dinero}</span>
+							<span className="total-amount">${new Intl.NumberFormat('de-DE').format(total_dinero)}</span>
 						</div>
 						<Link to="/checkout" className="btn animate">Pagar</Link>
 					</div>  : ''

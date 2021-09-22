@@ -33,6 +33,7 @@ const ShoppingCart = ({end = false, endAction}) => {
 	const handleRemoveProduct = (e, producto) => {
 		removeProductCarrito(e, producto)
 	}
+	
 
 	return (
 		<div className="shopping-cart section" style={{paddingTop: '0px'}}>
@@ -63,17 +64,20 @@ const ShoppingCart = ({end = false, endAction}) => {
 												<tr key={prod._id} >
 													<td className="image" data-title="Producto"><img src={prod.img} alt="#"/>
 														{
-															isMobile && <p style={{marginTop: '10px', marginLeft: '10px'}} className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link><br></br>${prod.precio}</p>
+															isMobile && <p style={{marginTop: '10px', marginLeft: '10px'}} className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link><br></br>${new Intl.NumberFormat('de-DE').format(prod.precio)} x {prod.cantidad} = ${new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</p>
 														}
 													</td>
-													<td className="product-des" data-title="Descripcion">
-														{
-															!isMobile && <p className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link></p>
-														}
-														{
-															!isMobile && <p className="product-des" title={prod.descripcion} style={{width: '500px', whiteSpace: 'nowrap', textOverflow: 'ellipsis',overflow: 'hidden'}}>{prod.descripcion}</p>
-														}
-													</td>
+													{
+														!isMobile &&
+														<td className="product-des" data-title="Descripcion">
+															{
+																!isMobile && <p className="product-name"><Link to={`product/${prod._id}`}>{prod.nombre}</Link></p>
+															}
+															{
+																!isMobile && <p className="product-des" title={prod.descripcion} style={{width: '500px', whiteSpace: 'nowrap', textOverflow: 'ellipsis',overflow: 'hidden'}}>{prod.descripcion}</p>
+															}
+														</td>
+													}
 													{
 														!isMobile && <td className="price" data-title="Precio unidad"><span>${prod.precio}</span></td>
 													}
@@ -100,7 +104,12 @@ const ShoppingCart = ({end = false, endAction}) => {
 															</div>
 														}
 													</td>
-													<td className="total-amount" data-title="Total"><span>{isMobile && 'Total Producto: '}${new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</span></td>
+													{
+														!isMobile &&
+														<td className="total-amount" data-title="Total">
+															<span>${new Intl.NumberFormat('de-DE').format(prod.precio * prod.cantidad)}</span>
+														</td>
+													}
 													{
 														!isMobile && !end &&
 															<td className="action" data-title="Quitar"><a onClick={(e) => handleRemoveProduct(e, prod)} href="#"><i className="ti-trash remove-icon"></i></a></td>
@@ -139,9 +148,9 @@ const ShoppingCart = ({end = false, endAction}) => {
 										<div className="col-lg-4 col-md-7 col-12">
 											<div className="right">
 												<ul>
-													<li>Subtotal<span>$ {total_dinero}</span></li>
+													<li>Subtotal<span>${new Intl.NumberFormat('de-DE').format(total_dinero)}</span></li>
 													<li>Envio<span>{shipping ? `$ ${shipping}` : 'Gratis'} </span></li>
-													<li className="last">Tu pago<span>$ {total_dinero + envio}</span></li>
+													<li className="last">Tu pago<span>${new Intl.NumberFormat('de-DE').format(total_dinero + envio)}</span></li>
 												</ul>
 												{
 													!end ?
