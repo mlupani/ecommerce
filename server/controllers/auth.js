@@ -14,7 +14,46 @@ const login = async(req, res = response) => {
     try {
       
         // Verificar si el email existe
-        const usuario = await Usuario.findOne({ correo });
+        const usuario = await Usuario.findOne({ correo, rol: 'USER_ROLE' });
+        if ( !usuario ) {
+            return res.status(400).json({
+                msg: 'Usuario / Password no son correctos'
+            });
+        }
+
+        // Verificar la contraseña
+        const validPassword = bcryptjs.compareSync( password, usuario.password );
+        if ( !validPassword ) {
+            return res.status(400).json({
+                msg: 'Usuario / Password no son correctos'
+            });
+        }
+
+        // Generar el JWT
+        const token = await generarJWT( usuario.id );
+
+        res.json({
+            usuario,
+            token
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }   
+
+}
+
+const loginAdmin = async(req, res = response) => {
+
+    const { correo, password } = req.body;
+
+    try {
+      
+        // Verificar si el email existe
+        const usuario = await Usuario.findOne({ correo, rol: 'ADMIN_ROLE' });
         if ( !usuario ) {
             return res.status(400).json({
                 msg: 'Usuario / Password no son correctos'
@@ -113,6 +152,7 @@ const validarTokenUsuario = async (req, res = response ) => {
 
 module.exports = {
     login,
+    loginAdmin,
     googleSignin,
     validarTokenUsuario
 }

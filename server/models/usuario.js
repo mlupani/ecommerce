@@ -17,23 +17,18 @@ const UsuarioSchema = Schema({
     },
     apellido: {
         type: String,
-        required: [true, 'El apellido es obligatorio']
     },
     telefono: {
         type: String,
-        required: [true, 'El telefono es obligatorio'],
     },
     pais: {
         type: String,
-        required: [true, 'El pais es obligatorio'],
     },
     ciudad: {
         type: String,
-        required: [true, 'La ciudad es obligatoria'],
     },
     direccion: {
         type: String,
-        required: [true, 'La direccion es obligatoria'],
     },
     img: {
         type: String,

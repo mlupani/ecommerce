@@ -4,7 +4,7 @@ const { Categoria } = require('../models');
 
 const obtenerCategorias = async(req, res = response ) => {
 
-    const { limite = 5, desde = 0 } = req.query;
+    const { limite = 0, desde = 0 } = req.query;
 
     const [ total, categorias ] = await Promise.all([
         Categoria.countDocuments(),
