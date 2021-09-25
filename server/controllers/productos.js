@@ -1,5 +1,6 @@
 const { response } = require('express');
 const { Producto, Categoria } = require('../models');
+const updateIndexAlgolia = require('../helpers/sendProductsToAlgolia')
 
 
 const obtenerProductos = async(req, res = response ) => {
@@ -99,6 +100,9 @@ const crearProducto = async(req, res = response ) => {
         .populate('categoria', 'nombre')
         .execPopulate();
 
+    //ACTUALIZO INDICE DE ALGOLIA SEARCH
+    updateIndexAlgolia()
+
     res.status(201).json( nuevoProducto );
 
 }
@@ -112,15 +116,34 @@ const actualizarProducto = async( req, res = response ) => {
         data.nombre  = data.nombre.toUpperCase();
     }
 
-    data.usuario = req.usuario._id;
+    if( data.descripcion ) {
+        data.descripcion  = data.descripcion;
+    }
 
-    const producto = await Producto.findByIdAndUpdate(id, data, { new: true });
+    if( data.precio ) {
+        data.precio  = data.precio;
+    }
+
+    if( data.stock ) {
+        data.stock  = data.stock;
+    }
+
+    const producto = await Producto.findByIdAndUpdate(id, data);
+
+    producto.precio = data.precio
+    producto.nombre = data.nombre
+    producto.descripcion = data.descripcion
+    producto.stock = data.stock
+    producto.categoria = data.categoria
+
+    //ACTUALIZO INDICE DE ALGOLIA SEARCH
+    updateIndexAlgolia()
 
     await producto
         .populate('usuario', 'nombre')
         .populate('categoria', 'nombre')
         .execPopulate();
-        
+
     res.json( producto );
 
 }
