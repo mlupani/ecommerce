@@ -66,6 +66,7 @@ const obtenerProductosByCategoria = async (req, res = response ) => {
         Producto.countDocuments(),
         Producto.find({ categoria: id})
             .populate('categoria', 'nombre')
+            .sort({nombre: 'asc'})
     ]);
 
     res.json({

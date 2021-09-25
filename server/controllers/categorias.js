@@ -11,6 +11,7 @@ const obtenerCategorias = async(req, res = response ) => {
         Categoria.find()
             .skip( Number( desde ) )
             .limit(Number( limite ))
+            .sort({nombre: 'asc'})
     ]);
 
     res.json({
