@@ -28,7 +28,6 @@ const obtenerProductosTrending = async(req, res = response ) => {
     const [ categorias ] = await Promise.all([
         Categoria.find()
             .skip( Number( desde ) )
-            .limit(Number( 5 ))
     ]);
 
     let resp  = await Promise.all(
