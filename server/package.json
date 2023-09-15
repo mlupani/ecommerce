@@ -1,15 +1,5 @@
 {
-  "name": "ecommerce-server",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node app",
-    "dev": "nodemon app"
-  },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "algoliasearch": "^4.10.5",
     "axios": "^0.21.4",
@@ -25,5 +15,18 @@
     "mongoose": "^5.11.15",
     "stripe": "^8.176.0",
     "uuid": "^8.3.2"
-  }
+  },
+  "description": "",
+  "engines": {
+    "node": "18.x"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "ecommerce-server",
+  "scripts": {
+    "dev": "nodemon app",
+    "start": "node app"
+  },
+  "version": "1.0.0"
 }
