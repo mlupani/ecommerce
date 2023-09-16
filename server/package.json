@@ -18,7 +18,8 @@
   },
   "description": "",
   "engines": {
-    "node": "18.x"
+    "node": "16.13.0",
+    "npm": ">=6.0.0"
   },
   "keywords": [],
   "license": "ISC",
