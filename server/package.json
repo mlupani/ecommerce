@@ -17,9 +17,6 @@
     "uuid": "^8.3.2"
   },
   "description": "",
-  "engines": {
-    "node": "18.x"
-  },
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
