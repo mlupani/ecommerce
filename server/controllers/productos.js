@@ -1,7 +1,5 @@
 const { response } = require('express');
 const { Producto, Categoria } = require('../models');
-const updateIndexAlgolia = require('../helpers/sendProductsToAlgolia')
-
 
 const obtenerProductos = async(req, res = response ) => {
 
@@ -156,8 +154,29 @@ const borrarProducto = async(req, res = response ) => {
     res.json( productoBorrado );
 }
 
+const updateIndexAlgolia = async (req, res = response) => {
+    const algoliasearch = require('algoliasearch/lite')
+    const axios = require('axios')
+    
+    const { ALGOLIAINDEXNAME, ALGOLIAAPPID, ALGOLIA_ADMIN_API_KEY } = process.env
+    const algoliaClient = algoliasearch(ALGOLIAAPPID, ALGOLIA_ADMIN_API_KEY)
+    
+    const index = algoliaClient.initIndex(ALGOLIAINDEXNAME)
+    
+    const { data } = await axios.get('https://ecommerce-production-195b.up.railway.app/api/productos?limite=0');
+    const products = data.productos.map(product => ({...product, objectID: product._id}))
 
-
+    try {
+        await index.saveObjects(products);
+        res.json({
+            msg: 'Algolia index updated'
+        })
+    } catch (error) {
+        res.json({
+            msg: error
+        })
+    }
+}
 
 module.exports = {
     crearProducto,
@@ -166,5 +185,6 @@ module.exports = {
     actualizarProducto,
     borrarProducto,
     obtenerProductosTrending,
-    obtenerProductosByCategoria
+    obtenerProductosByCategoria,
+    updateIndexAlgolia
 }

@@ -9,7 +9,8 @@ const { crearProducto,
         actualizarProducto, 
         borrarProducto,
         obtenerProductosTrending,
-        obtenerProductosByCategoria } = require('../controllers/productos');
+        obtenerProductosByCategoria,
+        updateIndexAlgolia } = require('../controllers/productos');
 
 const { existeCategoriaPorId, existeProductoPorId } = require('../helpers/db-validators');
 
@@ -29,6 +30,8 @@ router.get('/categoria/:id', [
 
 //  Obtener todos los productos agrupados por categoria
 router.get('/trending', obtenerProductosTrending );
+
+router.get('/updateAlgolia', updateIndexAlgolia );
 
 // Obtener una categoria por id - publico
 router.get('/:id',[
