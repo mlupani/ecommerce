@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
+//import { useEffect } from 'react'
 import useDevice from '../hooks/useDevice'
 import useFavoritos from '../hooks/useFavoritos'
-import useAlgoliaInsights from '../hooks/useAlgoliaInsights'
+//import useAlgoliaInsights from '../hooks/useAlgoliaInsights'
 import CardCheckout from './CardCheckout'
 import Comments from './Comments'
 import CommentsForm from './CommentsForm'
@@ -14,18 +14,20 @@ const ProductDetail = ({producto}) => {
 
 	const { img, descripcion, nombre, categoria } = producto
 	const { favoritosIDs, handleFavorito } = useFavoritos()
-	const { sendProductView} = useAlgoliaInsights()
+	//const { sendProductView} = useAlgoliaInsights()
 	const isMobile = useDevice()
 
 	//const { recommendations: relatedProducts } = useRelatedProducts(producto?._id)
 	//const { recommendations: frequentlyBoughtTogether } = useGetFrequentlyBoughtTogether(object?.objectID)
 
+	/*
 	useEffect(() => {
 		const { _id } = producto
 		if(_id){
 			sendProductView(_id)
 		}
 	}, [producto._id])
+	*/
 
 	return (
 		<section className="blog-single section" style={{paddingTop: '0px'}}>

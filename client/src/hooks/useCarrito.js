@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { delProduct, addProduct, calcularDinero, calcularCantidad, removeProduct, asignarEnvio, asignarCarrito, saveCarritoDB, restoreCarritoDB } from '../store/slices/carrito'
-import useAlgoliaInsights from '../hooks/useAlgoliaInsights'
+//import useAlgoliaInsights from '../hooks/useAlgoliaInsights'
 import { toast } from 'react-toastify'
 
 const useCarrito = () => {
@@ -10,7 +10,7 @@ const useCarrito = () => {
 	const totalCarrito = useSelector(state => state.carrito)
 	const { carrito, cantidad, total_dinero, status } = totalCarrito
 	const usuario = useSelector(state => state.usuario)
-	const { sendProductAddedToCart } = useAlgoliaInsights()
+	//const { sendProductAddedToCart } = useAlgoliaInsights()
 
 	useEffect(() => {
 		if(usuario.status === 'not-authenticated' && localStorage.getItem('carrito')){
@@ -86,7 +86,7 @@ const useCarrito = () => {
 		if(usuario.status === 'authenticated'){
 			dispatch(saveCarritoDB({producto, cantidad, action: 'add'}))
 		}
-		sendProductAddedToCart(producto._id)
+		//sendProductAddedToCart(producto._id)
 		toast('Producto agregado al carrito', {
 			position: 'bottom-right',
 			autoClose: 1500,
