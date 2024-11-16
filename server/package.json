@@ -1,6 +1,7 @@
 {
   "author": "",
   "dependencies": {
+    "@now/node-server": "^0.8.2",
     "@vercel/node": "^3.2.24",
     "algoliasearch": "^4.10.5",
     "axios": "^0.21.4",
