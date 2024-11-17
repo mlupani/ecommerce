@@ -15,7 +15,6 @@
     "google-auth-library": "^6.1.6",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.15",
-    "react-scripts": "^5.0.1",
     "stripe": "^8.176.0",
     "uuid": "^8.3.2"
   },
@@ -26,7 +25,7 @@
   "name": "ecommerce-server",
   "scripts": {
     "dev": "nodemon app",
-    "start": "node app"
+    "start": "node index.js"
   },
   "version": "1.0.0"
 }
