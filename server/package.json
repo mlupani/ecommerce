@@ -24,7 +24,7 @@
   "main": "index.js",
   "name": "ecommerce-server",
   "scripts": {
-    "dev": "nodemon app",
+    "dev": "nodemon index.js",
     "start": "node index.js"
   },
   "version": "1.0.0"
